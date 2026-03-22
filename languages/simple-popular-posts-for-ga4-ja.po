@@ -1,0 +1,414 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: simple-popular-posts-for-ga4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-20 21:26+0900\n"
+"PO-Revision-Date: 2026-03-20 21:26+0900\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Python Script\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "(Single ID only)"
+msgstr "（単一IDのみ）"
+
+msgid "0 for all time. e.g. 365 for 1 year."
+msgstr "0 で全期間。例: 365 で1年以内。"
+
+msgid "1. %1$s > %2$s > %3$s."
+msgstr "1. %1$s > %2$s > %3$s。"
+
+msgid "2. %1$s > %2$s."
+msgstr "2. %1$s > %2$s。"
+
+msgid "3. %1$s > %2$s > %3$s."
+msgstr "3. %1$s > %2$s > %3$s。"
+
+msgid "30 Days (Monthly)"
+msgstr "30日間 (月間)"
+
+msgid "7 Days (Weekly)"
+msgstr "7日間 (週間)"
+
+msgid "<code>spp_ga4_daily_event</code> (Daily)"
+msgstr "<code>spp_ga4_daily_event</code> (毎日)"
+
+msgid "<small>* Records used by this plugin (<code>_spp_ga4_pv_7d</code>, <code>_spp_ga4_pv_30d</code>)</small>"
+msgstr "<small>* このプラグインが使用するレコード (<code>_spp_ga4_pv_7d</code>, <code>_spp_ga4_pv_30d</code>)</small>"
+
+msgid "<strong style=\"color: #d63638;\">[IMPORTANT] Enabled by default.</strong><br>Uncheck only if you intend to reinstall and keep settings."
+msgstr "<strong style=\"color: #d63638;\">【重要】デフォルトで有効です。</strong><br>再インストール時に設定を引き継ぎたい場合のみ、チェックを外してください。"
+
+msgid "<strong>API Quota</strong>: Designed to stay within GA4 free quotas (daily execution). Please monitor your own API usage. (Est. usage: ~50 tokens per request)"
+msgstr "<strong>APIクォータ</strong>: GA4の無料クォータ内（日次実行）に収まるように設計されていますが、API使用量はご自身で監視してください。（目安: 1日1リクエストで約50トークンを消費します）"
+
+msgid "<strong>Limitation</strong>: This plugin fetches data for the top X posts based on the \"Fetch Limit\" setting. Posts ranking below this limit will not have their PV data updated."
+msgstr "<strong>制限事項</strong>: このプラグインは「データ取得件数」設定に基づいて上位X件の記事データを取得します。この制限を下回る順位の記事はPVデータが更新されません。"
+
+msgid "A simple popular posts widget that retrieves ranking data from Google Analytics 4 (GA4)."
+msgstr ""
+
+msgid "API & Services"
+msgstr "APIとサービス"
+
+msgid "Active (Enhanced Security)"
+msgstr "有効 (高セキュリティ)"
+
+msgid "Add the service account email as \"Viewer\""
+msgstr "サービスアカウントのメールアドレスを「閲覧者」として追加"
+
+msgid "Auto-Fetch Schedule"
+msgstr "自動取得スケジュール設定"
+
+msgid "Basic Settings"
+msgstr "基本設定"
+
+msgid "Behavior when deleting the plugin."
+msgstr "プラグイン削除時の動作設定。"
+
+msgid "Card Min Width (px):"
+msgstr "カード最小幅 (px):"
+
+msgid "Card Style"
+msgstr "カードスタイル"
+
+msgid "Category ID:"
+msgstr "カテゴリID:"
+
+msgid "Check API Quota Limits (Google Search)"
+msgstr "APIの無料枠上限について (Google検索)"
+
+msgid "Check this if you want to use your theme's styles or custom CSS. When enabled, the plugin's <code>style.css</code> file will <strong>NOT</strong> be loaded (improving performance by reducing requests), and the \"Design Presets\" feature will effectively be disabled (class names will still be output)."
+msgstr "テーマのスタイルやカスタムCSSを使用する場合にチェックしてください。有効にすると、プラグインの <code>style.css</code> ファイルは<strong>読み込まれなくなり</strong>（リクエスト削減によるパフォーマンス向上）、「デザインプリセット」機能による見た目の変更も実質的に無効化されます（クラス名は出力されます）。"
+
+msgid "Completely delete all settings and ranking data upon plugin deletion."
+msgstr "プラグインの削除時に設定とランキングデータをすべて完全に削除する。"
+
+msgid "Connection successful, but no data returned. GA4 data may take 24-48 hours to propagate after initial setup."
+msgstr "接続に成功しましたが、データが返されませんでした。GA4の設定直後は、データが反映されるまで24〜48時間かかる場合があります。"
+
+msgid "Create Account & Key (JSON)"
+msgstr "アカウント作成 & キー作成 (JSON)"
+
+msgid "Cron Event Name"
+msgstr "Cronイベント名"
+
+msgid "Custom Security Key"
+msgstr "カスタムセキュリティキー"
+
+msgid "DB Usage (wp_postmeta)"
+msgstr "DB使用状況 (wp_postmeta)"
+
+msgid "Data fetch triggered. Check System Status or debug logs for results."
+msgstr "データ取得を開始しました。結果はシステムステータスまたはデバッグログを確認してください。"
+
+msgid "Date Format:"
+msgstr "日付フォーマット:"
+
+msgid "Default (List)"
+msgstr "デフォルト (リスト)"
+
+msgid "Default includes sub-categories. (Single ID only)"
+msgstr "デフォルトはサブカテゴリを含みます。（単一IDのみ）"
+
+msgid "Defined in wp-config.php"
+msgstr "wp-config.php で定義済み"
+
+msgid "Delete Data"
+msgstr "データを削除する"
+
+msgid "Design Preset:"
+msgstr "デザインプリセット:"
+
+msgid "Disable Default CSS"
+msgstr "デフォルトCSSを無効化"
+
+msgid "Display Date"
+msgstr "日付を表示"
+
+msgid "Display Thumbnail"
+msgstr "サムネイルを表示"
+
+msgid "Displays popular posts based on GA4 data."
+msgstr "GA4データに基づいて人気記事を表示します。"
+
+msgid "Do not load plugin CSS."
+msgstr "プラグインのCSSを読み込まない。"
+
+msgid "Documentation file not found."
+msgstr "ドキュメントファイルが見つかりません。"
+
+msgid "Enable \"Google Analytics Data API\""
+msgstr "\"Google Analytics Data API\" を有効化"
+
+msgid "Enable Auto-Fetch"
+msgstr "自動取得を有効化"
+
+msgid "Enable daily background data fetching."
+msgstr "日次バックグラウンドデータ取得を有効にします。日1回、新しいデータを自動的に取得します。"
+
+msgid "Enter Category ID to filter posts. Blank for all categories."
+msgstr "絞り込むカテゴリIDを入力。空欄で全カテゴリ。"
+
+msgid "Enter Tag ID to filter posts. Blank for all tags."
+msgstr "絞り込むタグIDを入力。空欄で全タグ。"
+
+msgid "Enter connection info for <a href=\"https://developers.google.com/analytics/devguides/reporting/data/v1\" target=\"_blank\" rel=\"noopener noreferrer\">Google Analytics Data API</a>."
+msgstr "<a href=\"https://developers.google.com/analytics/devguides/reporting/data/v1\" target=\"_blank\" rel=\"noopener noreferrer\">Google Analytics Data API</a> の接続情報を入力してください。"
+
+msgid "Error: Property ID must be numeric."
+msgstr "エラー: プロパティIDは数字である必要があります。"
+
+msgid "Error: You entered a Measurement ID (G-xxx / UA-xxx). Please enter the numeric \"Property ID\"."
+msgstr "エラー: 測定ID (G-xxx / UA-xxx) が入力されています。数字のみの「プロパティID」を入力してください。"
+
+msgid "Exclude Post IDs (comma-separated):"
+msgstr "除外する投稿ID (カンマ区切り):"
+
+msgid "Exclude articles older than X days from the ranking. Set to 0 to include all articles."
+msgstr "X日より古い記事をランキングから除外します。0で全ての記事を含めます。"
+
+msgid "Failed to acquire Access Token."
+msgstr "アクセストークンの取得に失敗しました。"
+
+msgid "Fetch Data Now"
+msgstr "今すぐデータを取得"
+
+msgid "Fetch Failed: %s"
+msgstr "データ取得失敗: %s"
+
+msgid "Fetch Limit (Rows)"
+msgstr "データ取得件数 (行)"
+
+msgid "Fetch Limit must be between %d and %d."
+msgstr "データ取得件数は %d から %d の間で指定してください。"
+
+msgid "Fetch latest ranking data from GA4 immediately (Recommended: once a day)."
+msgstr "GA4から最新のランキングデータを即時取得します（推奨: 1日1回）。"
+
+msgid "Filter by Publish Date (days):"
+msgstr "投稿日の絞り込み (日):"
+
+msgid "GA4 Admin"
+msgstr "GA4管理"
+
+msgid "GA4 Property ID"
+msgstr "GA4 プロパティID"
+
+msgid "GA4 Ranking (Classic)"
+msgstr "GA4ランキング (クラシック)"
+
+msgid "Google Analytics Data API Quota Limits"
+msgstr "Google Analytics Data API 無料枠 上限"
+
+msgid "Google Cloud Console"
+msgstr "Google Cloud Console"
+
+msgid "H:"
+msgstr "高さ:"
+
+msgid "How to get Google Analytics Data API Service Account JSON Key"
+msgstr "Google Analytics Data APIのサービスアカウントでJSONキーを取得する方法"
+
+msgid "IAM & Admin > Service Accounts"
+msgstr "IAMと管理 > サービスアカウント"
+
+msgid "Invalid JSON Key or Decryption Failed. If you migrated the site or changed the WordPress salts, please re-save the JSON key in the settings."
+msgstr "JSONキーが無効、または復号に失敗しました。サイトを移行した場合や、WordPressのセキュリティキー(Salt)を変更した場合は、設定画面でJSONキーを再度保存し直してください。"
+
+msgid "Invalid JSON format."
+msgstr "JSON形式が正しくありません。"
+
+msgid "Invalid Service Account JSON. Missing required fields."
+msgstr "無効なサービスアカウントJSONです。必須フィールドが含まれていません。"
+
+msgid "Last Run Time"
+msgstr "最終実行日時"
+
+msgid "Limit (1-20):"
+msgstr "表示件数 (1-20):"
+
+msgid "Manual Data Fetch"
+msgstr "手動データ取得"
+
+msgid "Max number of pages to fetch (100 - 10000). Set this number based on your total posts (e.g., if you have 100 posts, set to 100). Lower limit reduces DB load. Default: 1000."
+msgstr "取得する記事数の上限 (100 - 10000)。総投稿数に合わせて設定してください（例: 100記事なら100に設定）。少ないほどDB負荷が下がります。デフォルト: 1000。"
+
+msgid "Minimum width of each card. Cards will expand to fill the available space."
+msgstr "各カードの最小幅。カードは利用可能なスペースを埋めるように伸縮します。"
+
+msgid "Missing GA4 Credentials: Property ID is empty."
+msgstr "GA4認証情報エラー: プロパティIDが空です。"
+
+msgid "Missing GA4 Credentials: Service Account JSON is empty."
+msgstr "GA4認証情報エラー: サービスアカウントJSONが空です。"
+
+msgid "Need Help?"
+msgstr "取得方法がわからない場合:"
+
+msgid "Next Schedule"
+msgstr "次回スケジュール"
+
+msgid "No Title Output"
+msgstr "タイトル出力なし"
+
+msgid "No data available."
+msgstr "データがありません。"
+
+msgid "No schedule (Please reactivate plugin)"
+msgstr "スケジュールなし (プラグインを再有効化してください)"
+
+msgid "Not Set (Standard Security)"
+msgstr "未設定 (標準セキュリティ)"
+
+msgid "Not run yet"
+msgstr "未実行"
+
+msgid "Note:"
+msgstr "注記:"
+
+msgid "Note: In Card Style, images are forced to 16:9 ratio. Set Thumbnail Size above to control resolution."
+msgstr "カードスタイルでは画像は16:9の比率で表示されます。解像度を調整するにはサムネイルサイズ設定を変更してください。"
+
+msgid "Notes & Limitations"
+msgstr "注意事項と制限"
+
+msgid "Number of posts to display in the ranking."
+msgstr "ランキングに表示する記事の数。"
+
+msgid "Numbered List"
+msgstr "番号付きリスト"
+
+msgid "Numeric ID of your GA4 Property.<br><strong>Important:</strong> This is <strong>NOT</strong> the Measurement ID (G-xxxx, UA-xxxx). It must be the <strong>numeric Property ID</strong>.<br><strong>How to find:</strong> GA4 Admin > Property Settings > Property Details > Property ID."
+msgstr "GA4プロパティの数値ID。<br><strong>重要:</strong> 測定ID (G-xxxx, UA-xxxx) <strong>ではありません</strong>。<strong>数字のみのプロパティID</strong>を入力してください。<br><strong>確認方法:</strong> GA4管理画面 > プロパティ設定 > プロパティの詳細 > プロパティID。"
+
+msgid "Paste the %1$s content of the JSON key file (starting with %2$s and ending with %3$s)."
+msgstr "JSONキーファイルの %1$s を貼り付けてください（%2$s で始まり %3$s で終わるもの）。"
+
+msgid "Process starts on the first access after the specified time once a day.<br>Note: Schedule is re-registered upon saving."
+msgstr "指定した時間のあとの最初のアクセス時に処理が開始されます（1日1回）。<br>注意: 保存時にスケジュールが再登録されます。"
+
+msgid "Property Access Management"
+msgstr "プロパティのアクセス管理"
+
+msgid "Related Records: <strong>%s</strong> rows (approx)"
+msgstr "関連レコード数: <strong>%s</strong> 行 (目安)"
+
+msgid "Result / Log"
+msgstr "実行結果 / ログ"
+
+msgid "Search Google for \"How to get Service Account JSON Key\""
+msgstr "Google検索「サービスアカウント JSONキー 取得方法」"
+
+msgid "Security check failed."
+msgstr "セキュリティチェックに失敗しました。"
+
+msgid "Service Account JSON Key"
+msgstr "サービスアカウント JSONキー"
+
+msgid "Setting this to several thousand can cause high database load and may lead to connection timeouts on some servers."
+msgstr "数千件に設定するとデータベースに高い負荷がかかり、サーバーによってはタイムアウトする可能性があります。"
+
+msgid "Settings"
+msgstr "設定"
+
+msgid "Settings for automatic data fetching."
+msgstr "自動データ取得の設定。"
+
+msgid "Setup Guide:"
+msgstr "設定手順:"
+
+msgid "Shorten Title (chars):"
+msgstr "タイトル短縮 (文字数):"
+
+msgid "Simple Popular Posts"
+msgstr "Simple Popular Posts"
+
+msgid "Simple Popular Posts (GA4)"
+msgstr "Simple Popular Posts (GA4)"
+
+msgid "Simple Popular Posts for GA4"
+msgstr "Simple Popular Posts for GA4"
+
+msgid "Simple Popular Posts for GA4 Settings"
+msgstr "Simple Popular Posts for GA4 設定"
+
+msgid "Specify Post IDs to exclude from the ranking."
+msgstr "ランキングから除外したい記事のIDを指定します。"
+
+msgid "Start Time"
+msgstr "開始時間"
+
+msgid "System Status"
+msgstr "システムステータス"
+
+msgid "Table: <code>%s</code>"
+msgstr "使用テーブル: <code>%s</code>"
+
+msgid "Tag ID:"
+msgstr "タグID:"
+
+msgid "The JSON key is securely encrypted using your WordPress installation's unique salt keys. If you migrate your site to a new server or change your wp-config.php security salts, you must re-save your JSON key here to generate a new valid encryption."
+msgstr "JSONキーは、ご利用のWordPress固有のソルトキーを使用して安全に暗号化されます。サイトを新しいサーバーに移行した場合や、wp-config.php のセキュリティソルトを変更した場合は、暗号化をやり直すためにJSONキーをこの画面で再度保存し直す必要があります。"
+
+msgid "The period for which GA4 data is aggregated (7 days or 30 days)."
+msgstr "GA4データの集計期間 (7日間または30日間)。"
+
+msgid "Thumbnail Size (px):"
+msgstr "サムネイルサイズ (px):"
+
+msgid "Time Range:"
+msgstr "集計期間:"
+
+msgid "Title Tag:"
+msgstr "タイトルタグ:"
+
+msgid "Title:"
+msgstr "タイトル:"
+
+msgid "Truncate the post title to this number of characters. 0 to disable."
+msgstr "記事タイトルを指定した文字数で切り詰めます。0で無効化。"
+
+msgid "Uninstall Settings"
+msgstr "アンインストール設定"
+
+msgid "Updated: %s posts"
+msgstr "更新数: %s 件"
+
+msgid "Usage"
+msgstr "使い方"
+
+msgid "W:"
+msgstr "幅:"
+
+msgid "Warning:"
+msgstr "警告:"
+
+msgid "Warning: Auto-fetch enabled but credentials are missing."
+msgstr "警告: 自動取得が有効ですが、認証情報が不足しています。"
+
+msgid "WordPress Default"
+msgstr "WordPress設定に従う"
+
+msgid "You can then write your own CSS targeting the <code>.spp-ga4-container</code> class."
+msgstr "その場合、<code>.spp-ga4-container</code> クラスに対して独自のCSSを記述してください。"
+
+msgid "You do not have permission."
+msgstr "権限がありません。"
+
+msgid "[Error]"
+msgstr "[エラー]"
+
+msgid "[Success]"
+msgstr "[成功]"
+
+msgid "e.g. 123, 456 (Max 100 IDs)"
+msgstr "例: 123, 456 (最大 100件)"
+
+msgid "entire"
+msgstr "全内容"
+

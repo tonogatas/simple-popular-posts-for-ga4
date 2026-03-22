@@ -1,0 +1,83 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "simple-popular-posts-for-ga4/ranking",
+    "version": "0.1.1",
+    "title": "Simple Popular Posts (GA4)",
+    "category": "widgets",
+    "icon": "chart-bar",
+    "description": "Show popular posts based on GA4 data.",
+    "attributes": {
+        "title": {
+            "type": "string",
+            "default": ""
+        },
+        "title_tag": {
+            "type": "string",
+            "default": "h2"
+        },
+        "limit": {
+            "type": "number",
+            "default": 5,
+            "maximum": 20
+        },
+        "range": {
+            "type": "string",
+            "default": "7d"
+        },
+        "cat_id": {
+            "type": "string",
+            "default": ""
+        },
+        "tag_id": {
+            "type": "string",
+            "default": ""
+        },
+        "shorten_title": {
+            "type": "number",
+            "default": 0
+        },
+        "show_thumb": {
+            "type": "boolean",
+            "default": true
+        },
+        "show_date": {
+            "type": "boolean",
+            "default": true
+        },
+        "date_format": {
+            "type": "string",
+            "default": "wp_default"
+        },
+        "thumb_w": {
+            "type": "number",
+            "default": 100
+        },
+        "thumb_h": {
+            "type": "number",
+            "default": 100
+        },
+        "exclude_ids": {
+            "type": "string",
+            "default": ""
+        },
+        "filter_days": {
+            "type": "number",
+            "default": 0
+        },
+        "style_preset": {
+            "type": "string",
+            "default": "list",
+            "enum": [
+                "list",
+                "numbered",
+                "card"
+            ]
+        },
+        "card_min_width": {
+            "type": "number",
+            "default": 150
+        }
+    },
+    "editorScript": "spp-ga4-ranking-editor-script"
+}

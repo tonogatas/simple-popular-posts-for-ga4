@@ -1,0 +1,158 @@
+/* Base Styles (Scoped to .spp-ga4-widget and .spp-ga4-container) */
+.spp-ga4-widget ul,
+.spp-ga4-container ul.wpp-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.spp-ga4-widget li,
+.spp-ga4-container li {
+    position: relative;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: flex-start;
+}
+
+.spp-ga4-widget li:last-child,
+.spp-ga4-container li:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.spp-ga4-widget .wpp-content,
+.spp-ga4-container .wpp-content {
+    flex: 1;
+    min-width: 0;
+    /* Ensures text truncation works if needed */
+}
+
+.spp-ga4-widget img.wpp-thumbnail,
+.spp-ga4-container img.wpp-thumbnail {
+    margin-right: 15px;
+    flex-shrink: 0;
+    border-radius: 4px;
+}
+
+.spp-ga4-widget a.wpp-post-title,
+.spp-ga4-container a.wpp-post-title {
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 1.4;
+    display: inline-block;
+    color: inherit;
+}
+
+.spp-ga4-widget .post-date,
+.spp-ga4-container .post-date {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.85em;
+    color: #888;
+}
+
+/* =========================================
+   Preset: Numbered List (.spp-ga4-preset-numbered)
+   ========================================= */
+.spp-ga4-preset-numbered ul {
+    counter-reset: spp-ga4-counter;
+}
+
+.spp-ga4-preset-numbered li {
+    padding-left: 36px;
+    /* Space for counter */
+    position: relative;
+}
+
+.spp-ga4-preset-numbered li::before {
+    counter-increment: spp-ga4-counter;
+    content: counter(spp-ga4-counter);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    background: #555;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 24px;
+    text-align: center;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* Gold, Silver, Bronze */
+.spp-ga4-preset-numbered li:nth-child(1)::before {
+    background: #d4af37;
+}
+
+.spp-ga4-preset-numbered li:nth-child(2)::before {
+    background: #c0c0c0;
+}
+
+.spp-ga4-preset-numbered li:nth-child(3)::before {
+    background: #cd7f32;
+}
+
+/* =========================================
+   Preset: Card Style (.spp-ga4-preset-card)
+   ========================================= */
+.spp-ga4-preset-card ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.spp-ga4-preset-card li {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    border: 1px solid #eee;
+    padding: 0 !important;
+    border-radius: 8px;
+    margin-bottom: 0;
+    /* Reset base style */
+    height: 100%;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s;
+}
+
+.spp-ga4-preset-card li:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.spp-ga4-preset-card img.wpp-thumbnail {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 100% !important;
+    /* Force width to fit container */
+    height: auto !important;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+.spp-ga4-preset-card a {
+    display: block;
+    width: 100%;
+}
+
+.spp-ga4-preset-card .wpp-content {
+    padding: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.spp-ga4-preset-card a.wpp-post-title {
+    font-size: 0.95em;
+    margin-bottom: auto;
+    /* Push footer down if any */
+}
+
+.spp-ga4-preset-card .post-date {
+    margin-top: 8px;
+}

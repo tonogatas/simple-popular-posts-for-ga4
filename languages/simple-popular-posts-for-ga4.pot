@@ -1,0 +1,414 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: simple-popular-posts-for-ga4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-20 21:26+0900\n"
+"PO-Revision-Date: 2026-03-20 21:26+0900\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Python Script\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "(Single ID only)"
+msgstr ""
+
+msgid "0 for all time. e.g. 365 for 1 year."
+msgstr ""
+
+msgid "1. %1$s > %2$s > %3$s."
+msgstr ""
+
+msgid "2. %1$s > %2$s."
+msgstr ""
+
+msgid "3. %1$s > %2$s > %3$s."
+msgstr ""
+
+msgid "30 Days (Monthly)"
+msgstr ""
+
+msgid "7 Days (Weekly)"
+msgstr ""
+
+msgid "<code>spp_ga4_daily_event</code> (Daily)"
+msgstr ""
+
+msgid "<small>* Records used by this plugin (<code>_spp_ga4_pv_7d</code>, <code>_spp_ga4_pv_30d</code>)</small>"
+msgstr ""
+
+msgid "<strong style=\"color: #d63638;\">[IMPORTANT] Enabled by default.</strong><br>Uncheck only if you intend to reinstall and keep settings."
+msgstr ""
+
+msgid "<strong>API Quota</strong>: Designed to stay within GA4 free quotas (daily execution). Please monitor your own API usage. (Est. usage: ~50 tokens per request)"
+msgstr ""
+
+msgid "<strong>Limitation</strong>: This plugin fetches data for the top X posts based on the \"Fetch Limit\" setting. Posts ranking below this limit will not have their PV data updated."
+msgstr ""
+
+msgid "A simple popular posts widget that retrieves ranking data from Google Analytics 4 (GA4)."
+msgstr ""
+
+msgid "API & Services"
+msgstr ""
+
+msgid "Active (Enhanced Security)"
+msgstr ""
+
+msgid "Add the service account email as \"Viewer\""
+msgstr ""
+
+msgid "Auto-Fetch Schedule"
+msgstr ""
+
+msgid "Basic Settings"
+msgstr ""
+
+msgid "Behavior when deleting the plugin."
+msgstr ""
+
+msgid "Card Min Width (px):"
+msgstr ""
+
+msgid "Card Style"
+msgstr ""
+
+msgid "Category ID:"
+msgstr ""
+
+msgid "Check API Quota Limits (Google Search)"
+msgstr ""
+
+msgid "Check this if you want to use your theme's styles or custom CSS. When enabled, the plugin's <code>style.css</code> file will <strong>NOT</strong> be loaded (improving performance by reducing requests), and the \"Design Presets\" feature will effectively be disabled (class names will still be output)."
+msgstr ""
+
+msgid "Completely delete all settings and ranking data upon plugin deletion."
+msgstr ""
+
+msgid "Connection successful, but no data returned. GA4 data may take 24-48 hours to propagate after initial setup."
+msgstr ""
+
+msgid "Create Account & Key (JSON)"
+msgstr ""
+
+msgid "Cron Event Name"
+msgstr ""
+
+msgid "Custom Security Key"
+msgstr ""
+
+msgid "DB Usage (wp_postmeta)"
+msgstr ""
+
+msgid "Data fetch triggered. Check System Status or debug logs for results."
+msgstr ""
+
+msgid "Date Format:"
+msgstr ""
+
+msgid "Default (List)"
+msgstr ""
+
+msgid "Default includes sub-categories. (Single ID only)"
+msgstr ""
+
+msgid "Defined in wp-config.php"
+msgstr ""
+
+msgid "Delete Data"
+msgstr ""
+
+msgid "Design Preset:"
+msgstr ""
+
+msgid "Disable Default CSS"
+msgstr ""
+
+msgid "Display Date"
+msgstr ""
+
+msgid "Display Thumbnail"
+msgstr ""
+
+msgid "Displays popular posts based on GA4 data."
+msgstr ""
+
+msgid "Do not load plugin CSS."
+msgstr ""
+
+msgid "Documentation file not found."
+msgstr ""
+
+msgid "Enable \"Google Analytics Data API\""
+msgstr ""
+
+msgid "Enable Auto-Fetch"
+msgstr ""
+
+msgid "Enable daily background data fetching."
+msgstr ""
+
+msgid "Enter Category ID to filter posts. Blank for all categories."
+msgstr ""
+
+msgid "Enter Tag ID to filter posts. Blank for all tags."
+msgstr ""
+
+msgid "Enter connection info for <a href=\"https://developers.google.com/analytics/devguides/reporting/data/v1\" target=\"_blank\" rel=\"noopener noreferrer\">Google Analytics Data API</a>."
+msgstr ""
+
+msgid "Error: Property ID must be numeric."
+msgstr ""
+
+msgid "Error: You entered a Measurement ID (G-xxx / UA-xxx). Please enter the numeric \"Property ID\"."
+msgstr ""
+
+msgid "Exclude Post IDs (comma-separated):"
+msgstr ""
+
+msgid "Exclude articles older than X days from the ranking. Set to 0 to include all articles."
+msgstr ""
+
+msgid "Failed to acquire Access Token."
+msgstr ""
+
+msgid "Fetch Data Now"
+msgstr ""
+
+msgid "Fetch Failed: %s"
+msgstr ""
+
+msgid "Fetch Limit (Rows)"
+msgstr ""
+
+msgid "Fetch Limit must be between %d and %d."
+msgstr ""
+
+msgid "Fetch latest ranking data from GA4 immediately (Recommended: once a day)."
+msgstr ""
+
+msgid "Filter by Publish Date (days):"
+msgstr ""
+
+msgid "GA4 Admin"
+msgstr ""
+
+msgid "GA4 Property ID"
+msgstr ""
+
+msgid "GA4 Ranking (Classic)"
+msgstr ""
+
+msgid "Google Analytics Data API Quota Limits"
+msgstr ""
+
+msgid "Google Cloud Console"
+msgstr ""
+
+msgid "H:"
+msgstr ""
+
+msgid "How to get Google Analytics Data API Service Account JSON Key"
+msgstr ""
+
+msgid "IAM & Admin > Service Accounts"
+msgstr ""
+
+msgid "Invalid JSON Key or Decryption Failed. If you migrated the site or changed the WordPress salts, please re-save the JSON key in the settings."
+msgstr ""
+
+msgid "Invalid JSON format."
+msgstr ""
+
+msgid "Invalid Service Account JSON. Missing required fields."
+msgstr ""
+
+msgid "Last Run Time"
+msgstr ""
+
+msgid "Limit (1-20):"
+msgstr ""
+
+msgid "Manual Data Fetch"
+msgstr ""
+
+msgid "Max number of pages to fetch (100 - 10000). Set this number based on your total posts (e.g., if you have 100 posts, set to 100). Lower limit reduces DB load. Default: 1000."
+msgstr ""
+
+msgid "Minimum width of each card. Cards will expand to fill the available space."
+msgstr ""
+
+msgid "Missing GA4 Credentials: Property ID is empty."
+msgstr ""
+
+msgid "Missing GA4 Credentials: Service Account JSON is empty."
+msgstr ""
+
+msgid "Need Help?"
+msgstr ""
+
+msgid "Next Schedule"
+msgstr ""
+
+msgid "No Title Output"
+msgstr ""
+
+msgid "No data available."
+msgstr ""
+
+msgid "No schedule (Please reactivate plugin)"
+msgstr ""
+
+msgid "Not Set (Standard Security)"
+msgstr ""
+
+msgid "Not run yet"
+msgstr ""
+
+msgid "Note:"
+msgstr ""
+
+msgid "Note: In Card Style, images are forced to 16:9 ratio. Set Thumbnail Size above to control resolution."
+msgstr ""
+
+msgid "Notes & Limitations"
+msgstr ""
+
+msgid "Number of posts to display in the ranking."
+msgstr ""
+
+msgid "Numbered List"
+msgstr ""
+
+msgid "Numeric ID of your GA4 Property.<br><strong>Important:</strong> This is <strong>NOT</strong> the Measurement ID (G-xxxx, UA-xxxx). It must be the <strong>numeric Property ID</strong>.<br><strong>How to find:</strong> GA4 Admin > Property Settings > Property Details > Property ID."
+msgstr ""
+
+msgid "Paste the %1$s content of the JSON key file (starting with %2$s and ending with %3$s)."
+msgstr ""
+
+msgid "Process starts on the first access after the specified time once a day.<br>Note: Schedule is re-registered upon saving."
+msgstr ""
+
+msgid "Property Access Management"
+msgstr ""
+
+msgid "Related Records: <strong>%s</strong> rows (approx)"
+msgstr ""
+
+msgid "Result / Log"
+msgstr ""
+
+msgid "Search Google for \"How to get Service Account JSON Key\""
+msgstr ""
+
+msgid "Security check failed."
+msgstr ""
+
+msgid "Service Account JSON Key"
+msgstr ""
+
+msgid "Setting this to several thousand can cause high database load and may lead to connection timeouts on some servers."
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Settings for automatic data fetching."
+msgstr ""
+
+msgid "Setup Guide:"
+msgstr ""
+
+msgid "Shorten Title (chars):"
+msgstr ""
+
+msgid "Simple Popular Posts"
+msgstr ""
+
+msgid "Simple Popular Posts (GA4)"
+msgstr ""
+
+msgid "Simple Popular Posts for GA4"
+msgstr ""
+
+msgid "Simple Popular Posts for GA4 Settings"
+msgstr ""
+
+msgid "Specify Post IDs to exclude from the ranking."
+msgstr ""
+
+msgid "Start Time"
+msgstr ""
+
+msgid "System Status"
+msgstr ""
+
+msgid "Table: <code>%s</code>"
+msgstr ""
+
+msgid "Tag ID:"
+msgstr ""
+
+msgid "The JSON key is securely encrypted using your WordPress installation's unique salt keys. If you migrate your site to a new server or change your wp-config.php security salts, you must re-save your JSON key here to generate a new valid encryption."
+msgstr ""
+
+msgid "The period for which GA4 data is aggregated (7 days or 30 days)."
+msgstr ""
+
+msgid "Thumbnail Size (px):"
+msgstr ""
+
+msgid "Time Range:"
+msgstr ""
+
+msgid "Title Tag:"
+msgstr ""
+
+msgid "Title:"
+msgstr ""
+
+msgid "Truncate the post title to this number of characters. 0 to disable."
+msgstr ""
+
+msgid "Uninstall Settings"
+msgstr ""
+
+msgid "Updated: %s posts"
+msgstr ""
+
+msgid "Usage"
+msgstr ""
+
+msgid "W:"
+msgstr ""
+
+msgid "Warning:"
+msgstr ""
+
+msgid "Warning: Auto-fetch enabled but credentials are missing."
+msgstr ""
+
+msgid "WordPress Default"
+msgstr ""
+
+msgid "You can then write your own CSS targeting the <code>.spp-ga4-container</code> class."
+msgstr ""
+
+msgid "You do not have permission."
+msgstr ""
+
+msgid "[Error]"
+msgstr ""
+
+msgid "[Success]"
+msgstr ""
+
+msgid "e.g. 123, 456 (Max 100 IDs)"
+msgstr ""
+
+msgid "entire"
+msgstr ""
+
