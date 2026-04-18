@@ -24,14 +24,14 @@ class SPP_GA4_Admin {
 	}
 
 	public function create_admin_page() {
-		$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'settings';
+		$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'settings'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html__( 'Simple Popular Posts for GA4 Settings', 'simple-popular-posts-for-ga4' ); ?></h1>
 			
 			<h2 class="nav-tab-wrapper">
-				<a href="?page=spp-ga4-settings&tab=settings" class="nav-tab <?php echo $active_tab === 'settings' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Settings', 'simple-popular-posts-for-ga4' ); ?></a>
-				<a href="?page=spp-ga4-settings&tab=docs" class="nav-tab <?php echo $active_tab === 'docs' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Usage', 'simple-popular-posts-for-ga4' ); ?></a>
+				<a href="?page=spp-ga4-settings&tab=settings" class="nav-tab <?php echo esc_attr( $active_tab === 'settings' ? 'nav-tab-active' : '' ); ?>"><?php esc_html_e( 'Settings', 'simple-popular-posts-for-ga4' ); ?></a>
+				<a href="?page=spp-ga4-settings&tab=docs" class="nav-tab <?php echo esc_attr( $active_tab === 'docs' ? 'nav-tab-active' : '' ); ?>"><?php esc_html_e( 'Usage', 'simple-popular-posts-for-ga4' ); ?></a>
 			</h2>
 
 			<?php if ( $active_tab === 'settings' ) : ?>
@@ -51,7 +51,7 @@ class SPP_GA4_Admin {
 					<form method="post" action="">
 						<?php wp_nonce_field( 'spp_ga4_manual_fetch', 'spp_ga4_fetch_nonce' ); ?>
 						<input type="hidden" name="action" value="spp_ga4_manual_fetch">
-						<?php submit_button( __( 'Fetch Data Now', 'simple-popular-posts-for-ga4' ), 'secondary', 'manual_fetch', true ); ?>
+						<?php submit_button( esc_html__( 'Fetch Data Now', 'simple-popular-posts-for-ga4' ), 'secondary', 'manual_fetch', true ); ?>
 					</form>
 				</div>
 				
@@ -67,16 +67,16 @@ class SPP_GA4_Admin {
 				<div class="spp-ga4-notes" style="background: #fff; padding: 20px; border: 1px solid #ccc; max-width: 800px; margin-top: 20px;">
 					<h3><?php echo esc_html__( 'Notes & Limitations', 'simple-popular-posts-for-ga4' ); ?></h3>
 					<ul style="list-style-type: disc; padding-left: 20px;">
-						<li><?php _e( '<strong>Limitation</strong>: This plugin fetches data for the top X posts based on the "Fetch Limit" setting. Posts ranking below this limit will not have their PV data updated.', 'simple-popular-posts-for-ga4' ); ?></li>
-						<li><?php _e( '<strong>API Quota</strong>: Designed to stay within GA4 free quotas (daily execution). Please monitor your own API usage. (Est. usage: ~50 tokens per request)', 'simple-popular-posts-for-ga4' ); ?>
+						<li><strong><?php esc_html_e( 'Limitation:', 'simple-popular-posts-for-ga4' ); ?></strong> <?php esc_html_e( 'This plugin fetches data for the top X posts based on the "Fetch Limit" setting. Posts ranking below this limit will not have their PV data updated.', 'simple-popular-posts-for-ga4' ); ?></li>
+						<li><strong><?php esc_html_e( 'API Quota:', 'simple-popular-posts-for-ga4' ); ?></strong> <?php esc_html_e( 'Designed to stay within GA4 free quotas (daily execution). Please monitor your own API usage. (Est. usage: ~50 tokens per request)', 'simple-popular-posts-for-ga4' ); ?>
 							<br>
 							<?php
 							$quota_query = urlencode( __( 'Google Analytics Data API Quota Limits', 'simple-popular-posts-for-ga4' ) );
 							$quota_text  = __( 'Check API Quota Limits (Google Search)', 'simple-popular-posts-for-ga4' );
 							printf( 
 								'<a href="https://www.google.com/search?q=%s" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">%s <span class="dashicons dashicons-external" style="font-size:14px; vertical-align:middle;"></span></a>', 
-								$quota_query, 
-								$quota_text 
+								esc_attr( $quota_query ), 
+								esc_html( $quota_text ) 
 							);
 							?>
 						</li>
@@ -98,17 +98,23 @@ class SPP_GA4_Admin {
 	public function page_init() {
 		// Handle Manual Fetch
 		if ( isset( $_POST['action'] ) && $_POST['action'] === 'spp_ga4_manual_fetch' ) {
-			if ( ! isset( $_POST['spp_ga4_fetch_nonce'] ) || ! wp_verify_nonce( $_POST['spp_ga4_fetch_nonce'], 'spp_ga4_manual_fetch' ) ) {
-				add_settings_error( 'spp_ga4_messages', 'spp_ga4_error', __( 'Security check failed.', 'simple-popular-posts-for-ga4' ), 'error' );
+			$nonce = isset( $_POST['spp_ga4_fetch_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['spp_ga4_fetch_nonce'] ) ) : '';
+			if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'spp_ga4_manual_fetch' ) ) {
+				add_settings_error( 'spp_ga4_messages', 'spp_ga4_error', esc_html__( 'Security check failed.', 'simple-popular-posts-for-ga4' ), 'error' );
 			} else if ( ! current_user_can( 'manage_options' ) ) {
-				add_settings_error( 'spp_ga4_messages', 'spp_ga4_error', __( 'You do not have permission.', 'simple-popular-posts-for-ga4' ), 'error' );
+				add_settings_error( 'spp_ga4_messages', 'spp_ga4_error', esc_html__( 'You do not have permission.', 'simple-popular-posts-for-ga4' ), 'error' );
 			} else {
 				try {
 					$fetcher = new SPP_GA4_Fetcher(); 
 					$fetcher->fetch_ga4_data( true );
-					add_settings_error( 'spp_ga4_messages', 'spp_ga4_success', __( 'Data fetch triggered. Check System Status or debug logs for results.', 'simple-popular-posts-for-ga4' ), 'updated' );
+					add_settings_error( 'spp_ga4_messages', 'spp_ga4_success', esc_html__( 'Data fetch triggered. Check System Status or debug logs for results.', 'simple-popular-posts-for-ga4' ), 'updated' );
 				} catch ( Exception $e ) {
-					add_settings_error( 'spp_ga4_messages', 'spp_ga4_error', sprintf( __( 'Fetch Failed: %s', 'simple-popular-posts-for-ga4' ), $e->getMessage() ), 'error' );
+					$error_msg = sprintf(
+						/* translators: %s: error message */
+						esc_html__( 'Fetch Failed: %s', 'simple-popular-posts-for-ga4' ),
+						$e->getMessage()
+					);
+					add_settings_error( 'spp_ga4_messages', 'spp_ga4_error', $error_msg, 'error' );
 				}
 			}
 		}
@@ -171,7 +177,7 @@ class SPP_GA4_Admin {
 		add_settings_section(
 			'spp_ga4_cron_section',
 			__( 'Auto-Fetch Schedule', 'simple-popular-posts-for-ga4' ),
-			function() { print __( 'Settings for automatic data fetching.', 'simple-popular-posts-for-ga4' ); },
+			function() { esc_html_e( 'Settings for automatic data fetching.', 'simple-popular-posts-for-ga4' ); },
 			'spp-ga4-settings'
 		);
 
@@ -186,7 +192,14 @@ class SPP_GA4_Admin {
 		add_settings_field(
 			'spp_ga4_cron_info',
 			__( 'Cron Event Name', 'simple-popular-posts-for-ga4' ),
-			function() { echo __( '<code>spp_ga4_daily_event</code> (Daily)', 'simple-popular-posts-for-ga4' ); },
+			function() { 
+				printf(
+					/* translators: 1: opening code tag, 2: closing code tag */
+					esc_html__( '%1$sspp_ga4_daily_event%2$s (Daily)', 'simple-popular-posts-for-ga4' ),
+					'<code>',
+					'</code>'
+				);
+			},
 			'spp-ga4-settings',
 			'spp_ga4_cron_section'
 		);
@@ -203,7 +216,7 @@ class SPP_GA4_Admin {
 		add_settings_section(
 			'spp_ga4_uninstall_section',
 			__( 'Uninstall Settings', 'simple-popular-posts-for-ga4' ),
-			function() { print __( 'Behavior when deleting the plugin.', 'simple-popular-posts-for-ga4' ); },
+			function() { esc_html_e( 'Behavior when deleting the plugin.', 'simple-popular-posts-for-ga4' ); },
 			'spp-ga4-settings'
 		);
 
@@ -275,7 +288,12 @@ class SPP_GA4_Admin {
 	}
 
 	public function section_info() {
-		print __( 'Enter connection info for <a href="https://developers.google.com/analytics/devguides/reporting/data/v1" target="_blank" rel="noopener noreferrer">Google Analytics Data API</a>.', 'simple-popular-posts-for-ga4' );
+		printf(
+			/* translators: 1: opening a tag, 2: closing a tag */
+			esc_html__( 'Enter connection info for %1$sGoogle Analytics Data API%2$s.', 'simple-popular-posts-for-ga4' ),
+			'<a href="https://developers.google.com/analytics/devguides/reporting/data/v1" target="_blank" rel="noopener noreferrer">',
+			'</a>'
+		);
 	}
 	
 	// CALLBACKS
@@ -286,10 +304,10 @@ class SPP_GA4_Admin {
 		$is_checked = ( $val === false || $val === '1' );
 		
 		echo '<label>';
-		echo '<input type="checkbox" name="spp_ga4_delete_on_uninstall" value="1" ' . checked( $is_checked, true, false ) . ' />';
-		echo ' ' . __( 'Completely delete all settings and ranking data upon plugin deletion.', 'simple-popular-posts-for-ga4' );
+		echo '<input type="checkbox" name="spp_ga4_delete_on_uninstall" value="1" ' . esc_attr( checked( $is_checked, true, false ) ) . ' />';
+		echo ' ' . esc_html__( 'Completely delete all settings and ranking data upon plugin deletion.', 'simple-popular-posts-for-ga4' );
 		echo '</label>';
-		echo '<p class="description">' . __( '<strong style="color: #d63638;">[IMPORTANT] Enabled by default.</strong><br>Uncheck only if you intend to reinstall and keep settings.', 'simple-popular-posts-for-ga4' ) . '</p>';
+		echo '<p class="description"><strong style="color: #d63638;">' . esc_html__( '[IMPORTANT] Enabled by default.', 'simple-popular-posts-for-ga4' ) . '</strong><br>' . esc_html__( 'Uncheck only if you intend to reinstall and keep settings.', 'simple-popular-posts-for-ga4' ) . '</p>';
 	}
 
 	public function service_account_json_callback() {
@@ -305,9 +323,11 @@ class SPP_GA4_Admin {
 		$search_query = urlencode( __( 'How to get Google Analytics Data API Service Account JSON Key', 'simple-popular-posts-for-ga4' ) );
 		$link_text    = __( 'Search Google for "How to get Service Account JSON Key"', 'simple-popular-posts-for-ga4' );
 		$google_link  = sprintf( 
-			'<a href="https://www.google.com/search?q=%s" target="_blank" rel="noopener noreferrer">%s</a>', 
-			$search_query, 
-			$link_text 
+			/* translators: 1: opening a tag, 2: url, 3: closing a tag */
+			esc_html__( 'Google Cloud Console (%1$s%2$s%3$s)', 'simple-popular-posts-for-ga4' ), 
+			'<a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer">', 
+			'https://console.cloud.google.com/', 
+			'</a>'
 		);
 
 		echo '<p class="description">';
@@ -329,7 +349,7 @@ class SPP_GA4_Admin {
 			esc_html__( '1. %1$s > %2$s > %3$s.', 'simple-popular-posts-for-ga4' ),
 			'<a href="https://console.cloud.google.com/apis/library/analyticsdata.googleapis.com" target="_blank">' . esc_html__( 'Google Cloud Console', 'simple-popular-posts-for-ga4' ) . '</a>',
 			esc_html__( 'API & Services', 'simple-popular-posts-for-ga4' ),
-			__( 'Enable "Google Analytics Data API"', 'simple-popular-posts-for-ga4' )
+			esc_html__( 'Enable "Google Analytics Data API"', 'simple-popular-posts-for-ga4' )
 		);
 		echo '<br>';
 
@@ -353,7 +373,7 @@ class SPP_GA4_Admin {
 
 		echo '<br><br><strong>' . esc_html__( 'Note:', 'simple-popular-posts-for-ga4' ) . '</strong> ' . esc_html__( 'The JSON key is securely encrypted using your WordPress installation\'s unique salt keys. If you migrate your site to a new server or change your wp-config.php security salts, you must re-save your JSON key here to generate a new valid encryption.', 'simple-popular-posts-for-ga4' );
 
-		echo '<br><br><strong>' . esc_html__( 'Need Help?', 'simple-popular-posts-for-ga4' ) . '</strong> ' . $google_link;
+		echo '<br><br><strong>' . esc_html__( 'Need Help?', 'simple-popular-posts-for-ga4' ) . '</strong> ' . wp_kses_post( $google_link );
 		echo '</p>';
 	}
 
@@ -362,7 +382,15 @@ class SPP_GA4_Admin {
 			'<input type="text" id="spp_ga4_property_id" name="spp_ga4_property_id" value="%s" />',
 			esc_attr( get_option( 'spp_ga4_property_id' ) )
 		);
-		echo '<p class="description">' . __( 'Numeric ID of your GA4 Property.<br><strong>Important:</strong> This is <strong>NOT</strong> the Measurement ID (G-xxxx, UA-xxxx). It must be the <strong>numeric Property ID</strong>.<br><strong>How to find:</strong> GA4 Admin > Property Settings > Property Details > Property ID.', 'simple-popular-posts-for-ga4' ) . '</p>';
+		echo '<p class="description">';
+		printf(
+			/* translators: 1: br tag, 2: opening strong tag, 3: closing strong tag */
+			esc_html__( 'Numeric ID of your GA4 Property.%1$s%2$sImportant:%3$s This is %2$sNOT%3$s the Measurement ID (G-xxxx, UA-xxxx). It must be the %2$snumeric Property ID%3$s.%1$s%2$sHow to find:%3$s GA4 Admin > Property Settings > Property Details > Property ID.', 'simple-popular-posts-for-ga4' ),
+			'<br>',
+			'<strong>',
+			'</strong>'
+		);
+		echo '</p>';
 	}
 
 	public function fetch_limit_callback() {
@@ -371,18 +399,30 @@ class SPP_GA4_Admin {
 			'<input type="number" id="spp_ga4_fetch_limit" name="spp_ga4_fetch_limit" value="%s" min="100" max="10000" />',
 			esc_attr( $limit )
 		);
-		echo '<p class="description">' . __( 'Max number of pages to fetch (100 - 10000). Set this number based on your total posts (e.g., if you have 100 posts, set to 100). Lower limit reduces DB load. Default: 1000.', 'simple-popular-posts-for-ga4' ) . '<br><strong style="color: #d63638;">' . __( 'Warning:', 'simple-popular-posts-for-ga4' ) . '</strong> ' . __( 'Setting this to several thousand can cause high database load and may lead to connection timeouts on some servers.', 'simple-popular-posts-for-ga4' ) . '</p>';
+		echo '<p class="description">' . esc_html__( 'Max number of pages to fetch (100 - 10000). Set this number based on your total posts (e.g., if you have 100 posts, set to 100). Lower limit reduces DB load. Default: 1000.', 'simple-popular-posts-for-ga4' ) . '<br><strong style="color: #d63638;">' . esc_html__( 'Warning:', 'simple-popular-posts-for-ga4' ) . '</strong> ' . esc_html__( 'Setting this to several thousand can cause high database load and may lead to connection timeouts on some servers.', 'simple-popular-posts-for-ga4' ) . '</p>';
 	}
 
 	public function sanitize_limit( $input ) {
 		$val = intval( $input );
 		
 		if ( $val < 100 ) {
-			add_settings_error( 'spp_ga4_fetch_limit', 'limit_too_low', sprintf( __( 'Fetch Limit must be between %d and %d.', 'simple-popular-posts-for-ga4' ), 100, 10000 ), 'error' );
+			$error_msg = sprintf(
+				/* translators: 1: minimum fetch limit, 2: maximum fetch limit */
+				esc_html__( 'Fetch Limit must be between %1$d and %2$d.', 'simple-popular-posts-for-ga4' ),
+				100,
+				10000
+			);
+			add_settings_error( 'spp_ga4_fetch_limit', 'limit_too_low', $error_msg, 'error' );
 			return 100;
 		}
 		if ( $val > 10000 ) {
-			add_settings_error( 'spp_ga4_fetch_limit', 'limit_too_high', sprintf( __( 'Fetch Limit must be between %d and %d.', 'simple-popular-posts-for-ga4' ), 100, 10000 ), 'error' );
+			$error_msg = sprintf(
+				/* translators: 1: minimum fetch limit, 2: maximum fetch limit */
+				esc_html__( 'Fetch Limit must be between %1$d and %2$d.', 'simple-popular-posts-for-ga4' ),
+				100,
+				10000
+			);
+			add_settings_error( 'spp_ga4_fetch_limit', 'limit_too_high', $error_msg, 'error' );
 			return 10000;
 		}
 		
@@ -394,26 +434,42 @@ class SPP_GA4_Admin {
 		echo '<select name="spp_ga4_cron_time" id="spp_ga4_cron_time">';
 		for ( $i = 0; $i < 24; $i++ ) {
 			$time = sprintf( '%02d:00', $i );
-			printf( '<option value="%s" %s>%s</option>', $time, selected( $current_val, $time, false ), $time );
+			printf( '<option value="%s" %s>%s</option>', esc_attr( $time ), selected( $current_val, $time, false ), esc_html( $time ) );
 		}
 		echo '</select>';
-		echo '<p class="description">' . __( 'Process starts on the first access after the specified time once a day.<br>Note: Schedule is re-registered upon saving.', 'simple-popular-posts-for-ga4' ) . '</p>';
+		echo '<p class="description">';
+		printf(
+			/* translators: 1: br tag */
+			esc_html__( 'Process starts on the first access after the specified time once a day.%1$sNote: Schedule is re-registered upon saving.', 'simple-popular-posts-for-ga4' ),
+			'<br>'
+		);
+		echo '</p>';
 	}
 
 	public function disable_css_callback() {
 		$checked = get_option( 'spp_ga4_disable_css' ) === '1' ? 'checked' : '';
 		echo '<label>';
-		echo '<input type="checkbox" name="spp_ga4_disable_css" value="1" ' . $checked . ' />';
-		echo ' ' . __( 'Do not load plugin CSS.', 'simple-popular-posts-for-ga4' );
+		echo '<input type="checkbox" name="spp_ga4_disable_css" value="1" ' . esc_attr( $checked ) . ' />';
+		echo ' ' . esc_html__( 'Do not load plugin CSS.', 'simple-popular-posts-for-ga4' );
 		echo '</label>';
-		echo '<p class="description">' . __( 'Check this if you want to use your theme\'s styles or custom CSS. When enabled, the plugin\'s <code>style.css</code> file will <strong>NOT</strong> be loaded (improving performance by reducing requests), and the "Design Presets" feature will effectively be disabled (class names will still be output).', 'simple-popular-posts-for-ga4' ) . '<br>' . __( 'You can then write your own CSS targeting the <code>.spp-ga4-container</code> class.', 'simple-popular-posts-for-ga4' ) . '</p>';
+		echo '<p class="description">';
+		printf(
+			/* translators: 1: opening code tag, 2: closing code tag, 3: opening strong tag, 4: closing strong tag, 5: br tag */
+			esc_html__( 'Check this if you want to use your theme\'s styles or custom CSS. When enabled, the plugin\'s %1$sstyle.css%2$s file will %3$sNOT%4$s be loaded (improving performance by reducing requests), and the "Design Presets" feature will effectively be disabled (class names will still be output).%5$sYou can then write your own CSS targeting the %1$s.spp-ga4-container%2$s class.', 'simple-popular-posts-for-ga4' ),
+			'<code>',
+			'</code>',
+			'<strong>',
+			'</strong>',
+			'<br>'
+		);
+		echo '</p>';
 	}
 	
 	public function cron_enabled_callback() {
 		$checked = get_option( 'spp_ga4_cron_enabled', '0' ) === '1' ? 'checked' : '';
 		echo '<label>';
-		echo '<input type="checkbox" name="spp_ga4_cron_enabled" value="1" ' . $checked . ' />';
-		echo ' ' . __( 'Enable daily background data fetching.', 'simple-popular-posts-for-ga4' );
+		echo '<input type="checkbox" name="spp_ga4_cron_enabled" value="1" ' . esc_attr( $checked ) . ' />';
+		echo ' ' . esc_html__( 'Enable daily background data fetching.', 'simple-popular-posts-for-ga4' );
 		echo '</label>';
 	}
 
@@ -427,7 +483,9 @@ class SPP_GA4_Admin {
 			return;
 		}
 
-		error_log( "SPP GA4: Cron reschedule triggered. Old: $old_value, New: $new_value" );
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			error_log( "SPP GA4: Cron reschedule triggered. Old: $old_value, New: $new_value" ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		}
 		
 		if ( $old_value === $new_value ) return;
 		
@@ -472,7 +530,10 @@ class SPP_GA4_Admin {
 		}
 		
 		$new_ts = $dt->getTimestamp();
-		error_log( "SPP GA4: Scheduling new event at " . $dt->format( 'Y-m-d H:i:s P' ) . " (TS: $new_ts)" );
+		
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			error_log( "SPP GA4: Scheduling new event at " . $dt->format( 'Y-m-d H:i:s P' ) . " (TS: $new_ts)" ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		}
 		
 		// 3. Schedule
 		wp_schedule_event( $new_ts, 'daily', 'spp_ga4_daily_event' );
@@ -485,27 +546,28 @@ class SPP_GA4_Admin {
 		$stats = get_option( 'spp_ga4_last_run_stats', false );
 		
 		echo '<table class="widefat striped" style="max-width: 600px;">';
-		echo '<thead><tr><th colspan="2">' . __( 'System Status', 'simple-popular-posts-for-ga4' ) . ' / DB</th></tr></thead>';
+		echo '<thead><tr><th colspan="2">' . esc_html__( 'System Status', 'simple-popular-posts-for-ga4' ) . ' / DB</th></tr></thead>';
 		echo '<tbody>';
 		
 		// Last Run
-		echo '<tr><td style="width: 150px;"><strong>' . __( 'Last Run Time', 'simple-popular-posts-for-ga4' ) . '</strong></td><td>';
+		echo '<tr><td style="width: 150px;"><strong>' . esc_html__( 'Last Run Time', 'simple-popular-posts-for-ga4' ) . '</strong></td><td>';
 		if ( $stats ) {
 			echo esc_html( $stats['time'] );
 			if ( isset($stats['status']) && $stats['status'] === 'success' ) {
-				echo ' <span style="color: green; font-weight: bold;">' . __( '[Success]', 'simple-popular-posts-for-ga4' ) . '</span>';
+				echo ' <span style="color: green; font-weight: bold;">' . esc_html__( '[Success]', 'simple-popular-posts-for-ga4' ) . '</span>';
 			} else {
-				echo ' <span style="color: red; font-weight: bold;">' . __( '[Error]', 'simple-popular-posts-for-ga4' ) . '</span>';
+				echo ' <span style="color: red; font-weight: bold;">' . esc_html__( '[Error]', 'simple-popular-posts-for-ga4' ) . '</span>';
 			}
 		} else {
-			echo __( 'Not run yet', 'simple-popular-posts-for-ga4' );
+			echo esc_html__( 'Not run yet', 'simple-popular-posts-for-ga4' );
 		}
 		echo '</td></tr>';
 
 		// Count / Message
-		echo '<tr><td><strong>' . __( 'Result / Log', 'simple-popular-posts-for-ga4' ) . '</strong></td><td>';
+		echo '<tr><td><strong>' . esc_html__( 'Result / Log', 'simple-popular-posts-for-ga4' ) . '</strong></td><td>';
 		if ( $stats ) {
-			printf( __( 'Updated: %s posts', 'simple-popular-posts-for-ga4' ) . '<br>', intval( $stats['count'] ) );
+			/* translators: %s: number of updated posts */
+			printf( esc_html__( 'Updated: %s posts', 'simple-popular-posts-for-ga4' ) . '<br>', intval( $stats['count'] ) );
 			if ( ! empty( $stats['message'] ) ) echo '<span style="color: #666;">' . esc_html( $stats['message'] ) . '</span>';
 		} else {
 			echo '-';
@@ -514,34 +576,54 @@ class SPP_GA4_Admin {
 
 		// Next Schedule
 		$next_schedule = wp_next_scheduled( 'spp_ga4_daily_event' );
-		echo '<tr><td><strong>' . __( 'Next Schedule', 'simple-popular-posts-for-ga4' ) . '</strong></td><td>';
+		echo '<tr><td><strong>' . esc_html__( 'Next Schedule', 'simple-popular-posts-for-ga4' ) . '</strong></td><td>';
 		if ( $next_schedule ) {
 			// Convert to local time
 			echo esc_html( wp_date( 'Y-m-d H:i:s', $next_schedule ) );
 		} else {
-			echo '<span style="color: red;">' . __( 'No schedule (Please reactivate plugin)', 'simple-popular-posts-for-ga4' ) . '</span>';
+			echo '<span style="color: red;">' . esc_html__( 'No schedule (Please reactivate plugin)', 'simple-popular-posts-for-ga4' ) . '</span>';
 		}
 		echo '</td></tr>';
 
 		// Custom Key Status
-		echo '<tr><td><strong>' . __( 'Custom Security Key', 'simple-popular-posts-for-ga4' ) . '</strong></td><td>';
+		echo '<tr><td><strong>' . esc_html__( 'Custom Security Key', 'simple-popular-posts-for-ga4' ) . '</strong></td><td>';
 		if ( defined( 'SPP_GA4_CUSTOM_KEY' ) && SPP_GA4_CUSTOM_KEY !== '' ) {
-			echo '<span style="color: green; font-weight: bold;">' . __( 'Active (Enhanced Security)', 'simple-popular-posts-for-ga4' ) . '</span>';
-			echo ' <small>(' . __( 'Defined in wp-config.php', 'simple-popular-posts-for-ga4' ) . ')</small>';
+			echo '<span style="color: green; font-weight: bold;">' . esc_html__( 'Active (Enhanced Security)', 'simple-popular-posts-for-ga4' ) . '</span>';
+			echo ' <small>(' . esc_html__( 'Defined in wp-config.php', 'simple-popular-posts-for-ga4' ) . ')</small>';
 		} else {
-			echo '<span style="color: #666;">' . __( 'Not Set (Standard Security)', 'simple-popular-posts-for-ga4' ) . '</span>';
+			echo '<span style="color: #666;">' . esc_html__( 'Not Set (Standard Security)', 'simple-popular-posts-for-ga4' ) . '</span>';
 		}
 		echo '</td></tr>';
 
 		// DB Usage
 		// Count records in postmeta for our keys
 		$key_pattern = $wpdb->esc_like( '_spp_ga4_pv_' ) . '%';
-		$row_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->postmeta WHERE meta_key LIKE %s", $key_pattern ) );
+		$row_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->postmeta WHERE meta_key LIKE %s", $key_pattern ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		
-		echo '<tr><td><strong>' . __( 'DB Usage (wp_postmeta)', 'simple-popular-posts-for-ga4' ) . '</strong></td><td>';
-		printf( __( 'Table: <code>%s</code>', 'simple-popular-posts-for-ga4' ) . '<br>', $wpdb->postmeta );
-		printf( __( 'Related Records: <strong>%s</strong> rows (approx)', 'simple-popular-posts-for-ga4' ) . '<br>', number_format( $row_count ) );
-		echo __( '<small>* Records used by this plugin (<code>_spp_ga4_pv_7d</code>, <code>_spp_ga4_pv_30d</code>)</small>', 'simple-popular-posts-for-ga4' );
+		echo '<tr><td><strong>' . esc_html__( 'DB Usage (wp_postmeta)', 'simple-popular-posts-for-ga4' ) . '</strong></td><td>';
+		printf(
+			/* translators: 1: opening code tag, 2: postmeta table name, 3: closing code tag */
+			esc_html__( 'Table: %1$s%2$s%3$s', 'simple-popular-posts-for-ga4' ),
+			'<code>',
+			esc_html( $wpdb->postmeta ),
+			'</code>'
+		);
+		echo '<br>';
+		printf(
+			/* translators: 1: opening strong tag, 2: row count, 3: closing strong tag */
+			esc_html__( 'Related Records: %1$s%2$s%3$s rows (approx)', 'simple-popular-posts-for-ga4' ),
+			'<strong>',
+			number_format( $row_count ),
+			'</strong>'
+		);
+		echo '<br><small>* ';
+		printf(
+			/* translators: 1: opening code tag, 2: closing code tag */
+			esc_html__( 'Records used by this plugin (%1$s_spp_ga4_pv_7d%2$s, %1$s_spp_ga4_pv_30d%2$s)', 'simple-popular-posts-for-ga4' ),
+			'<code>',
+			'</code>'
+		);
+		echo '</small>';
 		echo '</td></tr>';
 		
 		echo '</tbody></table>';
@@ -550,7 +632,7 @@ class SPP_GA4_Admin {
 	public function render_readme() {
 		$readme_path = SPP_GA4_PATH . 'readme.txt';
 		if ( ! file_exists( $readme_path ) ) {
-			echo '<p>' . __( 'Documentation file not found.', 'simple-popular-posts-for-ga4' ) . '</p>';
+			echo '<p>' . esc_html__( 'Documentation file not found.', 'simple-popular-posts-for-ga4' ) . '</p>';
 			return;
 		}
 
@@ -582,7 +664,7 @@ class SPP_GA4_Admin {
 		$content = wpautop( $content );
 
 		echo '<div class="markdown-body">';
-		echo $content;
+		echo wp_kses_post( $content );
 		echo '</div>';
 	}
 

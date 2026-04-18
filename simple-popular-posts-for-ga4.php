@@ -3,7 +3,7 @@
  * Plugin Name:       Simple Popular Posts for GA4
  * Plugin URI:        https://github.com/tonogatas/simple-popular-posts-for-ga4
  * Description:       A simple popular posts widget that retrieves ranking data from Google Analytics 4 (GA4).
- * Version:           0.1.1
+ * Version:           0.1.2
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            tonogata
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define Constants
-define( 'SPP_GA4_VERSION', '0.1.1' );
+define( 'SPP_GA4_VERSION', '0.1.2' );
 define( 'SPP_GA4_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SPP_GA4_URL', plugin_dir_url( __FILE__ ) );
 
@@ -43,7 +43,7 @@ function spp_ga4_enqueue_scripts() {
 // Load Text Domain
 add_action( 'plugins_loaded', 'spp_ga4_load_textdomain' );
 function spp_ga4_load_textdomain() {
-	load_plugin_textdomain( 'simple-popular-posts-for-ga4', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	load_plugin_textdomain( 'simple-popular-posts-for-ga4', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
 }
 
 // Activation Hook
@@ -52,7 +52,7 @@ register_activation_hook( __FILE__, 'spp_ga4_activate' );
 // Add Settings Link to Plugins Page
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'spp_ga4_add_settings_link' );
 function spp_ga4_add_settings_link( $links ) {
-	$settings_link = '<a href="options-general.php?page=spp-ga4-settings">' . __( 'Settings', 'simple-popular-posts-for-ga4' ) . '</a>';
+	$settings_link = '<a href="options-general.php?page=spp-ga4-settings">' . esc_html__( 'Settings', 'simple-popular-posts-for-ga4' ) . '</a>';
 	array_unshift( $links, $settings_link );
 	return $links;
 }

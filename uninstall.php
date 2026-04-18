@@ -28,7 +28,7 @@ if ( get_option( 'spp_ga4_delete_on_uninstall', '1' ) === '1' ) {
 	
 	// If the server uses an external object cache, transients are stored there, so the DB query isn't needed.
 	if ( ! wp_using_ext_object_cache() ) {
-		$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '_transient_spp_ga4_%' OR option_name LIKE '_transient_timeout_spp_ga4_%'" );
+		$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '_transient_spp_ga4_%' OR option_name LIKE '_transient_timeout_spp_ga4_%'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
 }
 

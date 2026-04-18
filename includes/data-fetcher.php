@@ -27,13 +27,15 @@ class SPP_GA4_Fetcher {
 
 		// 2. Transients Lock (Process Concurrency)
 		if ( get_transient( $this->lock_transient ) ) {
-			error_log( 'SPP GA4: Fetch aborted due to active lock.' );
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( 'SPP GA4: Fetch aborted due to active lock.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			}
 			return;
 		}
 		set_transient( $this->lock_transient, true, 10 * MINUTE_IN_SECONDS );
 		
 		// Increase time limit for this process
-		set_time_limit( 300 );
+		set_time_limit( 300 ); // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
 
 		$update_count = 0;
 
@@ -137,7 +139,7 @@ class SPP_GA4_Fetcher {
 				
 				// CLEANUP: Remove old ranking data to prevent stale entries (e.g. if limit is lowered)
 				global $wpdb;
-				$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key IN ('_spp_ga4_pv_7d', '_spp_ga4_pv_30d')" );
+				$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key IN ('_spp_ga4_pv_7d', '_spp_ga4_pv_30d')" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 				foreach ( $aggregated as $path => $counts ) {
 					$post_id = url_to_postid( $path );
@@ -163,7 +165,9 @@ class SPP_GA4_Fetcher {
 					'message' => 'Completed successfully.',
 				));
 
-				error_log( "SPP GA4: Data updated successfully. ($update_count posts)" );
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( "SPP GA4: Data updated successfully. ($update_count posts)" ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				}
 
 			} else {
 				// Success (No Data) - Inform user about potential delay
@@ -172,7 +176,9 @@ class SPP_GA4_Fetcher {
 
 		} catch ( Exception $e ) {
 			delete_transient( $this->lock_transient );
-			error_log( 'SPP GA4 Error: ' . $e->getMessage() );
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				error_log( 'SPP GA4 Error: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			}
 			
 			// Save Error Stats
 			update_option( 'spp_ga4_last_run_stats', array(

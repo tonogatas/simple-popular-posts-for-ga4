@@ -3,7 +3,7 @@
 ![Banner](assets-wp-repo/banner-1544x500.png)
 
 ![License](https://img.shields.io/badge/license-GPLv2-blue.svg)
-![Version](https://img.shields.io/badge/version-0.1.1-green.svg)
+![Version](https://img.shields.io/badge/version-0.1.2-green.svg)
 ![PHP](https://img.shields.io/badge/php-%3E%3D7.4-8892BF.svg)
 ![WordPress](https://img.shields.io/badge/WordPress-%3E%3D5.8-21759B.svg)
 

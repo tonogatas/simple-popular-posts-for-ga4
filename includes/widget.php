@@ -20,19 +20,19 @@ class SPP_GA4_Widget extends WP_Widget {
 		
 		// Bypass cache in Customizer Preview OR Admin (Block Editor) to show real-time changes
 		if ( is_customize_preview() || is_admin() ) {
-			echo self::generate_cache( $instance, $cache_key, $args );
+			echo wp_kses_post( self::generate_cache( $instance, $cache_key, $args ) );
 			return;
 		}
 
 		$cached_output = get_transient( $cache_key );
 
 		if ( $cached_output !== false ) {
-			echo $cached_output;
+			echo wp_kses_post( $cached_output );
 			return;
 		}
 
 		// Fallback: Generate cache on the fly
-		echo self::generate_cache( $instance, $cache_key, $args );
+		echo wp_kses_post( self::generate_cache( $instance, $cache_key, $args ) );
 	}
 
 	/**
@@ -79,7 +79,7 @@ class SPP_GA4_Widget extends WP_Widget {
 		$query_args = array(
 			'post_type'      => 'post',
 			'posts_per_page' => $limit,
-			'meta_key'       => $meta_key,
+			'meta_key'       => $meta_key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 			'orderby'        => 'meta_value_num',
 			'order'          => 'DESC',
 			'ignore_sticky_posts' => true,
@@ -103,7 +103,7 @@ class SPP_GA4_Widget extends WP_Widget {
 			}
 
 			if ( ! empty( $exclude_ids ) ) {
-				$query_args['post__not_in'] = $exclude_ids;
+				$query_args['post__not_in'] = $exclude_ids; // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in
 			}
 		}
 
@@ -117,6 +117,7 @@ class SPP_GA4_Widget extends WP_Widget {
 			);
 		}
 
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in
 		$rank_query = new WP_Query( $query_args );
 
 		ob_start();
@@ -125,9 +126,9 @@ class SPP_GA4_Widget extends WP_Widget {
 		// Note: Themes often provide their own before_widget with dynamic classes.
 		// Instead of modifying before_widget via regex, we wrap the internal list in a div with the preset class.
 		
-		echo $args['before_widget'];
+		echo wp_kses_post( $args['before_widget'] );
 		if ( ! empty( $title ) && $title_tag !== 'none' ) { // Only show title if set and not disabled
-			echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
+			echo wp_kses_post( $args['before_title'] ) . esc_html( $title ) . wp_kses_post( $args['after_title'] );
 		}
 		
 		echo '<div class="spp-ga4-container spp-ga4-preset-' . esc_attr( $style_preset ) . '">';
@@ -138,7 +139,7 @@ class SPP_GA4_Widget extends WP_Widget {
 				$min_w = ! empty( $instance['card_min_width'] ) ? intval( $instance['card_min_width'] ) : 150;
 				$list_style = ' style="grid-template-columns: repeat(auto-fill, minmax(' . $min_w . 'px, 1fr));"';
 			}
-			echo '<ul class="wpp-list"' . $list_style . '>'; 
+			echo wp_kses_post( '<ul class="wpp-list"' . $list_style . '>' ); 
 			while ( $rank_query->have_posts() ) {
 				$rank_query->the_post();
 				$post_title = get_the_title();
@@ -159,11 +160,11 @@ class SPP_GA4_Widget extends WP_Widget {
 
 				echo '<li>';
 				if ( $thumb ) {
-					echo '<a href="' . get_permalink() . '">' . $thumb . '</a>';
+					echo '<a href="' . esc_url( get_permalink() ) . '">' . wp_kses_post( $thumb ) . '</a>';
 				}
 
 				echo '<div class="wpp-content">';
-				echo '<a href="' . get_permalink() . '" class="wpp-post-title" title="' . esc_attr( get_the_title() ) . '">' . esc_html( $post_title ) . '</a>';
+				echo '<a href="' . esc_url( get_permalink() ) . '" class="wpp-post-title" title="' . esc_attr( get_the_title() ) . '">' . esc_html( $post_title ) . '</a>';
 				
 				// Date Display
 				if ( $show_date ) {
@@ -180,11 +181,11 @@ class SPP_GA4_Widget extends WP_Widget {
 			echo '</ul>';
 			wp_reset_postdata();
 		} else {
-			echo '<p>' . __( 'No data available.', 'simple-popular-posts-for-ga4' ) . '</p>';
+			echo '<p>' . esc_html__( 'No data available.', 'simple-popular-posts-for-ga4' ) . '</p>';
 		}
 		echo '</div>'; // End container
 		
-		echo $args['after_widget'];
+		echo wp_kses_post( $args['after_widget'] );
 
 		$output = ob_get_clean();
 
@@ -213,100 +214,99 @@ class SPP_GA4_Widget extends WP_Widget {
 		$title_tag = ! empty( $instance['title_tag'] ) ? $instance['title_tag'] : 'h2';
 		?>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'simple-popular-posts-for-ga4' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title_tag' ) ); ?>"><?php _e( 'Title Tag:', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title_tag' ) ); ?>"><?php esc_html_e( 'Title Tag:', 'simple-popular-posts-for-ga4' ); ?></label>
 			<select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title_tag' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title_tag' ) ); ?>">
 				<option value="h2" <?php selected( $title_tag, 'h2' ); ?>>H2</option>
 				<option value="h3" <?php selected( $title_tag, 'h3' ); ?>>H3</option>
 				<option value="h4" <?php selected( $title_tag, 'h4' ); ?>>H4</option>
 				<option value="span" <?php selected( $title_tag, 'span' ); ?>>span</option>
-				<option value="none" <?php selected( $title_tag, 'none' ); ?>><?php _e( 'No Title Output', 'simple-popular-posts-for-ga4' ); ?></option>
+				<option value="none" <?php selected( $title_tag, 'none' ); ?>><?php esc_html_e( 'No Title Output', 'simple-popular-posts-for-ga4' ); ?></option>
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'style_preset' ) ); ?>"><?php _e( 'Design Preset:', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'style_preset' ) ); ?>"><?php esc_html_e( 'Design Preset:', 'simple-popular-posts-for-ga4' ); ?></label>
 			<select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'style_preset' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'style_preset' ) ); ?>">
-				<option value="list" <?php selected( $style_preset, 'list' ); ?>><?php _e( 'Default (List)', 'simple-popular-posts-for-ga4' ); ?></option>
-				<option value="numbered" <?php selected( $style_preset, 'numbered' ); ?>><?php _e( 'Numbered List', 'simple-popular-posts-for-ga4' ); ?></option>
-				<option value="card" <?php selected( $style_preset, 'card' ); ?>><?php _e( 'Card Style', 'simple-popular-posts-for-ga4' ); ?></option>
+				<option value="list" <?php selected( $style_preset, 'list' ); ?>><?php esc_html_e( 'Default (List)', 'simple-popular-posts-for-ga4' ); ?></option>
+				<option value="numbered" <?php selected( $style_preset, 'numbered' ); ?>><?php esc_html_e( 'Numbered List', 'simple-popular-posts-for-ga4' ); ?></option>
+				<option value="card" <?php selected( $style_preset, 'card' ); ?>><?php esc_html_e( 'Card Style', 'simple-popular-posts-for-ga4' ); ?></option>
 			</select>
-			</select>
-			<br><small><?php _e( 'Note: In Card Style, images are forced to 16:9 ratio. Set Thumbnail Size above to control resolution.', 'simple-popular-posts-for-ga4' ); ?></small>
+			<br><small><?php esc_html_e( 'Note: In Card Style, images are forced to 16:9 ratio. Set Thumbnail Size above to control resolution.', 'simple-popular-posts-for-ga4' ); ?></small>
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'card_min_width' ) ); ?>"><?php _e( 'Card Min Width (px):', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'card_min_width' ) ); ?>"><?php esc_html_e( 'Card Min Width (px):', 'simple-popular-posts-for-ga4' ); ?></label>
 			<input class="tiny-text" id="<?php echo esc_attr( $this->get_field_id( 'card_min_width' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'card_min_width' ) ); ?>" type="number" min="100" value="<?php echo ! empty( $instance['card_min_width'] ) ? esc_attr( $instance['card_min_width'] ) : 150; ?>">
-			<br><small><?php _e( 'Minimum width of each card. Cards will expand to fill the available space.', 'simple-popular-posts-for-ga4' ); ?></small>
+			<br><small><?php esc_html_e( 'Minimum width of each card. Cards will expand to fill the available space.', 'simple-popular-posts-for-ga4' ); ?></small>
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'limit' ) ); ?>"><?php _e( 'Limit (1-20):', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'limit' ) ); ?>"><?php esc_html_e( 'Limit (1-20):', 'simple-popular-posts-for-ga4' ); ?></label>
 			<span class="dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Number of posts to display in the ranking.', 'simple-popular-posts-for-ga4' ); ?>" style="color:#888; font-size:16px; margin-top:2px; cursor:help;"></span>
 			<input class="tiny-text" id="<?php echo esc_attr( $this->get_field_id( 'limit' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'limit' ) ); ?>" type="number" min="1" max="20" value="<?php echo esc_attr( $limit ); ?>">
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'range' ) ); ?>"><?php _e( 'Time Range:', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'range' ) ); ?>"><?php esc_html_e( 'Time Range:', 'simple-popular-posts-for-ga4' ); ?></label>
 			<span class="dashicons dashicons-editor-help" title="<?php esc_attr_e( 'The period for which GA4 data is aggregated (7 days or 30 days).', 'simple-popular-posts-for-ga4' ); ?>" style="color:#888; font-size:16px; margin-top:2px; cursor:help;"></span>
 			<select id="<?php echo esc_attr( $this->get_field_id( 'range' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'range' ) ); ?>">
-				<option value="7d" <?php selected( $range, '7d' ); ?>><?php _e( '7 Days (Weekly)', 'simple-popular-posts-for-ga4' ); ?></option>
-				<option value="30d" <?php selected( $range, '30d' ); ?>><?php _e( '30 Days (Monthly)', 'simple-popular-posts-for-ga4' ); ?></option>
+				<option value="7d" <?php selected( $range, '7d' ); ?>><?php esc_html_e( '7 Days (Weekly)', 'simple-popular-posts-for-ga4' ); ?></option>
+				<option value="30d" <?php selected( $range, '30d' ); ?>><?php esc_html_e( '30 Days (Monthly)', 'simple-popular-posts-for-ga4' ); ?></option>
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'cat_id' ) ); ?>"><?php _e( 'Category ID:', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'cat_id' ) ); ?>"><?php esc_html_e( 'Category ID:', 'simple-popular-posts-for-ga4' ); ?></label>
 			<span class="dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter Category ID to filter posts. Blank for all categories.', 'simple-popular-posts-for-ga4' ); ?>" style="color:#888; font-size:16px; margin-top:2px; cursor:help;"></span>
 			<input class="tiny-text" id="<?php echo esc_attr( $this->get_field_id( 'cat_id' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'cat_id' ) ); ?>" type="text" value="<?php echo esc_attr( $cat_id ); ?>">
-			<br><small><?php _e( 'Default includes sub-categories. (Single ID only)', 'simple-popular-posts-for-ga4' ); ?></small>
+			<br><small><?php esc_html_e( 'Default includes sub-categories. (Single ID only)', 'simple-popular-posts-for-ga4' ); ?></small>
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'tag_id' ) ); ?>"><?php _e( 'Tag ID:', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'tag_id' ) ); ?>"><?php esc_html_e( 'Tag ID:', 'simple-popular-posts-for-ga4' ); ?></label>
 			<span class="dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Enter Tag ID to filter posts. Blank for all tags.', 'simple-popular-posts-for-ga4' ); ?>" style="color:#888; font-size:16px; margin-top:2px; cursor:help;"></span>
 			<input class="tiny-text" id="<?php echo esc_attr( $this->get_field_id( 'tag_id' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'tag_id' ) ); ?>" type="text" value="<?php echo esc_attr( $tag_id ); ?>">
-			<br><small><?php _e( '(Single ID only)', 'simple-popular-posts-for-ga4' ); ?></small>
+			<br><small><?php esc_html_e( '(Single ID only)', 'simple-popular-posts-for-ga4' ); ?></small>
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>"><?php _e( 'Exclude Post IDs (comma-separated):', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>"><?php esc_html_e( 'Exclude Post IDs (comma-separated):', 'simple-popular-posts-for-ga4' ); ?></label>
 			<span class="dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Specify Post IDs to exclude from the ranking.', 'simple-popular-posts-for-ga4' ); ?>" style="color:#888; font-size:16px; margin-top:2px; cursor:help;"></span>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'exclude_ids' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'exclude_ids' ) ); ?>" type="text" value="<?php echo esc_attr( $exclude_ids ); ?>">
-			<br><small><?php _e( 'e.g. 123, 456 (Max 100 IDs)', 'simple-popular-posts-for-ga4' ); ?></small>
+			<br><small><?php esc_html_e( 'e.g. 123, 456 (Max 100 IDs)', 'simple-popular-posts-for-ga4' ); ?></small>
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'filter_days' ) ); ?>"><?php _e( 'Filter by Publish Date (days):', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'filter_days' ) ); ?>"><?php esc_html_e( 'Filter by Publish Date (days):', 'simple-popular-posts-for-ga4' ); ?></label>
 			<span class="dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Exclude articles older than X days from the ranking. Set to 0 to include all articles.', 'simple-popular-posts-for-ga4' ); ?>" style="color:#888; font-size:16px; margin-top:2px; cursor:help;"></span>
 			<input class="tiny-text" id="<?php echo esc_attr( $this->get_field_id( 'filter_days' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'filter_days' ) ); ?>" type="number" min="0" value="<?php echo esc_attr( $filter_days ); ?>">
-			<br><small><?php _e( '0 for all time. e.g. 365 for 1 year.', 'simple-popular-posts-for-ga4' ); ?></small>
+			<br><small><?php esc_html_e( '0 for all time. e.g. 365 for 1 year.', 'simple-popular-posts-for-ga4' ); ?></small>
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'shorten_title' ) ); ?>"><?php _e( 'Shorten Title (chars):', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'shorten_title' ) ); ?>"><?php esc_html_e( 'Shorten Title (chars):', 'simple-popular-posts-for-ga4' ); ?></label>
 			<input class="tiny-text" id="<?php echo esc_attr( $this->get_field_id( 'shorten_title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'shorten_title' ) ); ?>" type="number" min="0" value="<?php echo esc_attr( $shorten_title ); ?>">
-			<br><small><?php _e( 'Truncate the post title to this number of characters. 0 to disable.', 'simple-popular-posts-for-ga4' ); ?></small>
+			<br><small><?php esc_html_e( 'Truncate the post title to this number of characters. 0 to disable.', 'simple-popular-posts-for-ga4' ); ?></small>
 
 		</p>
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $show_thumb ); ?> id="<?php echo esc_attr( $this->get_field_id( 'show_thumb' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_thumb' ) ); ?>" />
-			<label for="<?php echo esc_attr( $this->get_field_id( 'show_thumb' ) ); ?>"><?php _e( 'Display Thumbnail', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'show_thumb' ) ); ?>"><?php esc_html_e( 'Display Thumbnail', 'simple-popular-posts-for-ga4' ); ?></label>
 		</p>
 		<p>
-			<label><?php _e( 'Thumbnail Size (px):', 'simple-popular-posts-for-ga4' ); ?></label><br>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'thumb_w' ) ); ?>"><?php _e( 'W:', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label><?php esc_html_e( 'Thumbnail Size (px):', 'simple-popular-posts-for-ga4' ); ?></label><br>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'thumb_w' ) ); ?>"><?php esc_html_e( 'W:', 'simple-popular-posts-for-ga4' ); ?></label>
 			<input class="tiny-text" id="<?php echo esc_attr( $this->get_field_id( 'thumb_w' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'thumb_w' ) ); ?>" type="number" value="<?php echo esc_attr( $thumb_w ); ?>">
-			<label for="<?php echo esc_attr( $this->get_field_id( 'thumb_h' ) ); ?>"><?php _e( 'H:', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'thumb_h' ) ); ?>"><?php esc_html_e( 'H:', 'simple-popular-posts-for-ga4' ); ?></label>
 			<input class="tiny-text" id="<?php echo esc_attr( $this->get_field_id( 'thumb_h' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'thumb_h' ) ); ?>" type="number" value="<?php echo esc_attr( $thumb_h ); ?>">
 		</p>
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $show_date ); ?> id="<?php echo esc_attr( $this->get_field_id( 'show_date' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_date' ) ); ?>" />
-			<label for="<?php echo esc_attr( $this->get_field_id( 'show_date' ) ); ?>"><?php _e( 'Display Date', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'show_date' ) ); ?>"><?php esc_html_e( 'Display Date', 'simple-popular-posts-for-ga4' ); ?></label>
 		</p>
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'date_format' ) ); ?>"><?php _e( 'Date Format:', 'simple-popular-posts-for-ga4' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'date_format' ) ); ?>"><?php esc_html_e( 'Date Format:', 'simple-popular-posts-for-ga4' ); ?></label>
 			<select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'date_format' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'date_format' ) ); ?>">
-				<option value="wp_default" <?php selected( $date_format, 'wp_default' ); ?>><?php _e( 'WordPress Default', 'simple-popular-posts-for-ga4' ); ?></option>
-				<option value="Y/m/d" <?php selected( $date_format, 'Y/m/d' ); ?>><?php echo date( 'Y/m/d' ); ?></option>
-				<option value="Y-m-d" <?php selected( $date_format, 'Y-m-d' ); ?>><?php echo date( 'Y-m-d' ); ?></option>
-				<option value="d/m/Y" <?php selected( $date_format, 'd/m/Y' ); ?>><?php echo date( 'd/m/Y' ); ?></option>
-				<option value="F j, Y" <?php selected( $date_format, 'F j, Y' ); ?>><?php echo date( 'F j, Y' ); ?></option>
+				<option value="wp_default" <?php selected( $date_format, 'wp_default' ); ?>><?php esc_html_e( 'WordPress Default', 'simple-popular-posts-for-ga4' ); ?></option>
+				<option value="Y/m/d" <?php selected( $date_format, 'Y/m/d' ); ?>><?php echo esc_html( wp_date( 'Y/m/d' ) ); ?></option>
+				<option value="Y-m-d" <?php selected( $date_format, 'Y-m-d' ); ?>><?php echo esc_html( wp_date( 'Y-m-d' ) ); ?></option>
+				<option value="d/m/Y" <?php selected( $date_format, 'd/m/Y' ); ?>><?php echo esc_html( wp_date( 'd/m/Y' ) ); ?></option>
+				<option value="F j, Y" <?php selected( $date_format, 'F j, Y' ); ?>><?php echo esc_html( wp_date( 'F j, Y' ) ); ?></option>
 			</select>
 		</p>
 		<?php
