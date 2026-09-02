@@ -125,6 +125,11 @@
                             onChange: function (val) { setAttributes({ shorten_title: parseInt(val) }); }
                         }),
                         el(ToggleControl, {
+                            label: getLabel('prevent_duplicates', 'Prevent duplicates on the same page'),
+                            checked: attributes.prevent_duplicates,
+                            onChange: function (val) { setAttributes({ prevent_duplicates: val }); }
+                        }),
+                        el(ToggleControl, {
                             label: getLabel('show_thumb', 'Show Thumbnail'),
                             checked: attributes.show_thumb,
                             onChange: function (val) { setAttributes({ show_thumb: val }); }

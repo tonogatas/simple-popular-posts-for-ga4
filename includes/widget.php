@@ -6,6 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class SPP_GA4_Widget extends WP_Widget {
 
+	public static $shared_exclude_ids = array();
+
 	public function __construct() {
 		parent::__construct(
 			'spp_ga4_widget',
@@ -15,30 +17,28 @@ class SPP_GA4_Widget extends WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
-		// Output the cache if valid
-		$cache_key = 'spp_ga4_cache_' . $this->number . '_' . md5( serialize( $instance ) );
-		
-		// Bypass cache in Customizer Preview OR Admin (Block Editor) to show real-time changes
-		if ( is_customize_preview() || is_admin() ) {
-			echo wp_kses_post( self::generate_cache( $instance, $cache_key, $args ) );
-			return;
-		}
-
-		$cached_output = get_transient( $cache_key );
-
-		if ( $cached_output !== false ) {
-			echo wp_kses_post( $cached_output );
-			return;
-		}
-
-		// Fallback: Generate cache on the fly
-		echo wp_kses_post( self::generate_cache( $instance, $cache_key, $args ) );
+		$base_cache_key = 'spp_ga4_cache_' . $this->number . '_' . md5( serialize( $instance ) );
+		echo wp_kses_post( self::generate_cache( $instance, $base_cache_key, $args ) );
 	}
 
 	/**
 	 * Generate and Cache Widget HTML.
 	 */
 	public static function generate_cache( $instance, $cache_key, $args = array() ) {
+		$prevent_duplicates = ! empty( $instance['prevent_duplicates'] ) ? (bool) $instance['prevent_duplicates'] : false;
+
+		if ( $prevent_duplicates && ! empty( self::$shared_exclude_ids ) ) {
+			$cache_key .= '_' . md5( serialize( self::$shared_exclude_ids ) );
+		}
+
+		if ( ! is_customize_preview() && ! is_admin() ) {
+			$cached_output = get_transient( $cache_key );
+			if ( is_array( $cached_output ) && isset( $cached_output['html'] ) && isset( $cached_output['post_ids'] ) ) {
+				self::$shared_exclude_ids = array_merge( self::$shared_exclude_ids, $cached_output['post_ids'] );
+				return $cached_output['html'];
+			}
+		}
+
 		// Initialize style_preset early for use in default args
 		$style_preset = ! empty( $instance['style_preset'] ) ? $instance['style_preset'] : 'list';
 
@@ -93,18 +93,24 @@ class SPP_GA4_Widget extends WP_Widget {
 		}
 
 		// Process Exclude IDs
+		$exclude_ids = array();
 		if ( ! empty( $exclude_ids_str ) ) {
 			$exclude_ids = array_map( 'intval', explode( ',', $exclude_ids_str ) );
 			$exclude_ids = array_filter( $exclude_ids ); // Remove 0s
-			
-			// Safety Limit in Logic as well
-			if ( count( $exclude_ids ) > 100 ) {
-				$exclude_ids = array_slice( $exclude_ids, 0, 100 );
-			}
+		}
+		
+		if ( $prevent_duplicates && ! empty( self::$shared_exclude_ids ) ) {
+			$exclude_ids = array_merge( $exclude_ids, self::$shared_exclude_ids );
+			$exclude_ids = array_unique( $exclude_ids );
+		}
 
-			if ( ! empty( $exclude_ids ) ) {
-				$query_args['post__not_in'] = $exclude_ids; // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in
-			}
+		// Safety Limit in Logic as well
+		if ( count( $exclude_ids ) > 100 ) {
+			$exclude_ids = array_slice( $exclude_ids, 0, 100 );
+		}
+
+		if ( ! empty( $exclude_ids ) ) {
+			$query_args['post__not_in'] = $exclude_ids; // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in
 		}
 
 		// Filter by Post Date (Published within X days)
@@ -140,8 +146,11 @@ class SPP_GA4_Widget extends WP_Widget {
 				$list_style = ' style="grid-template-columns: repeat(auto-fill, minmax(' . $min_w . 'px, 1fr));"';
 			}
 			echo wp_kses_post( '<ul class="wpp-list"' . $list_style . '>' ); 
+			
+			$rendered_ids = array();
 			while ( $rank_query->have_posts() ) {
 				$rank_query->the_post();
+				$rendered_ids[] = get_the_ID();
 				$post_title = get_the_title();
 				
 				// Fix: UTF-8 for Japanese
@@ -189,8 +198,12 @@ class SPP_GA4_Widget extends WP_Widget {
 
 		$output = ob_get_clean();
 
+		self::$shared_exclude_ids = array_unique( array_merge( self::$shared_exclude_ids, isset( $rendered_ids ) ? $rendered_ids : array() ) );
+
 		// Save to Transient
-		set_transient( $cache_key, $output, 25 * HOUR_IN_SECONDS );
+		if ( ! is_customize_preview() && ! is_admin() ) {
+			set_transient( $cache_key, array( 'html' => $output, 'post_ids' => isset( $rendered_ids ) ? $rendered_ids : array() ), 25 * HOUR_IN_SECONDS );
+		}
 
 		return $output;
 	}
@@ -207,6 +220,7 @@ class SPP_GA4_Widget extends WP_Widget {
 		$thumb_h = ! empty( $instance['thumb_h'] ) ? $instance['thumb_h'] : 150;
 		$show_date = isset( $instance['show_date'] ) ? (bool) $instance['show_date'] : true;
 		$date_format = ! empty( $instance['date_format'] ) ? $instance['date_format'] : 'wp_default';
+		$prevent_duplicates = isset( $instance['prevent_duplicates'] ) ? (bool) $instance['prevent_duplicates'] : false;
 
 		$show_thumb = isset( $instance['show_thumb'] ) ? (bool) $instance['show_thumb'] : true; // Default ON
 		$filter_days = ! empty( $instance['filter_days'] ) ? intval( $instance['filter_days'] ) : 0;
@@ -285,6 +299,10 @@ class SPP_GA4_Widget extends WP_Widget {
 
 		</p>
 		<p>
+			<input class="checkbox" type="checkbox" <?php checked( $prevent_duplicates ); ?> id="<?php echo esc_attr( $this->get_field_id( 'prevent_duplicates' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'prevent_duplicates' ) ); ?>" />
+			<label for="<?php echo esc_attr( $this->get_field_id( 'prevent_duplicates' ) ); ?>"><?php esc_html_e( 'Prevent duplicates on the same page', 'simple-popular-posts-for-ga4' ); ?></label>
+		</p>
+		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $show_thumb ); ?> id="<?php echo esc_attr( $this->get_field_id( 'show_thumb' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_thumb' ) ); ?>" />
 			<label for="<?php echo esc_attr( $this->get_field_id( 'show_thumb' ) ); ?>"><?php esc_html_e( 'Display Thumbnail', 'simple-popular-posts-for-ga4' ); ?></label>
 		</p>
@@ -350,6 +368,7 @@ class SPP_GA4_Widget extends WP_Widget {
 		$instance['show_date'] = ( ! empty( $new_instance['show_date'] ) ) ? (bool) $new_instance['show_date'] : false;
 		$instance['date_format'] = ( ! empty( $new_instance['date_format'] ) ) ? sanitize_text_field( $new_instance['date_format'] ) : 'wp_default';
 		$instance['show_thumb'] = isset( $new_instance['show_thumb'] ) ? (bool) $new_instance['show_thumb'] : false;
+		$instance['prevent_duplicates'] = isset( $new_instance['prevent_duplicates'] ) ? (bool) $new_instance['prevent_duplicates'] : false;
 
 		// Clear cache using the unified key structure
 		delete_transient( 'spp_ga4_cache_' . $this->number );

@@ -56,6 +56,7 @@ function spp_ga4_register_block() {
 			'show_date' => __( 'Display Date', 'simple-popular-posts-for-ga4' ),
 			'date_format' => __( 'Date Format:', 'simple-popular-posts-for-ga4' ),
 			'fmt_wp_default' => __( 'WordPress Default', 'simple-popular-posts-for-ga4' ),
+			'prevent_duplicates' => __( 'Prevent duplicates on the same page', 'simple-popular-posts-for-ga4' ),
 		)
 	);
 	
@@ -87,6 +88,7 @@ function spp_ga4_render_block( $attributes ) {
 		'style_preset'  => isset($attributes['style_preset']) ? $attributes['style_preset'] : 'list',
 		'card_min_width'=> isset($attributes['card_min_width']) ? $attributes['card_min_width'] : 150,
 		'date_format'   => isset($attributes['date_format']) ? $attributes['date_format'] : 'wp_default',
+		'prevent_duplicates' => isset($attributes['prevent_duplicates']) ? $attributes['prevent_duplicates'] : false,
 	);
 	
 	$cache_key = 'spp_ga4_block_' . md5( serialize( $instance ) );

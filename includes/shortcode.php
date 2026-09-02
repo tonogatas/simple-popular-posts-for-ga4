@@ -36,6 +36,7 @@ function spp_ga4_ranking_shortcode_handler( $atts ) {
 		'filter_days'   => 0,
 		'style_preset'  => 'list',
 		'title_tag'     => 'h2',
+		'prevent_duplicates' => 0,
 	), $atts, 'spp_ga4_ranking' );
 
 	// Prepare instance array for the Widget's generator
@@ -49,6 +50,7 @@ function spp_ga4_ranking_shortcode_handler( $atts ) {
 	$instance['thumb_h'] = intval( $instance['thumb_h'] );
 	$instance['show_date'] = (bool) $instance['show_date'];
 	$instance['show_thumb'] = (bool) $instance['show_thumb'];
+	$instance['prevent_duplicates'] = (bool) $instance['prevent_duplicates'];
 
 	// Generate a unique cache key for this specific shortcode configuration
 	// We use a different prefix to avoid colliding with numbered widget instances

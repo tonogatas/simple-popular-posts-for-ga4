@@ -412,3 +412,7 @@ msgstr "例: 123, 456 (最大 100件)"
 msgid "entire"
 msgstr "全内容"
 
+ 
+
+msgid "Prevent duplicates on the same page"
+msgstr "同じページでの重複を避ける"

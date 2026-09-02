@@ -3,7 +3,7 @@
  * Plugin Name:       Simple Popular Posts for GA4
  * Plugin URI:        https://github.com/tonogatas/simple-popular-posts-for-ga4
  * Description:       A simple popular posts widget that retrieves ranking data from Google Analytics 4 (GA4).
- * Version:           0.1.2
+ * Version:           0.1.3
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            tonogata
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define Constants
-define( 'SPP_GA4_VERSION', '0.1.2' );
+define( 'SPP_GA4_VERSION', '0.1.3' );
 define( 'SPP_GA4_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SPP_GA4_URL', plugin_dir_url( __FILE__ ) );
 

@@ -2,9 +2,9 @@
 Contributors: tonogata
 Tags: popular posts, google analytics, ga4, ranking, widget
 Requires at least: 5.8
-Tested up to: 6.9
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.2
+Stable tag: 0.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,11 @@ Insert the following shortcode into any post or page:
 *   `exclude_ids`: Exclude specific Post IDs (e.g. `123,456`)
 *   `filter_days`: Filter by publish date in days (e.g. `365` for within 1 year. 0 to disable)
 *   `title_tag`: HTML tag for the title (e.g. `h2`, `h3`, `h4`, `span`, `none`). Default: `h2`
+*   `prevent_duplicates`: 1 to prevent duplicate posts across multiple widgets/blocks on the same page (Default: 0)
+*   `style_preset`: Design preset (`list`, `numbered`, or `card`). Default: `list`
+*   `card_min_width`: Minimum card width in px if card style is used (Default: 150)
+*   `thumb_w`: Thumbnail width in px (Default: 100)
+*   `thumb_h`: Thumbnail height in px (Default: 100)
 
 **Block Editor**
 Search for the "Simple Popular Posts (GA4)" block in the editor and place it. You can adjust various options from the sidebar settings panel.
@@ -117,6 +122,10 @@ It is an optional security constant you can define in your `wp-config.php` file.
 
 
 == Changelog ==
+
+= 0.1.3 =
+* Added a new option to prevent duplicate posts across multiple widgets/blocks on the same page.
+* Fixed an issue where the cache was bypassed when using shortcodes or the block editor.
 
 = 0.1.2 =
 * Refactored code structure and updated translation mechanisms.
